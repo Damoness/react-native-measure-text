@@ -9,7 +9,7 @@ import React, { useRef } from 'react';
 import TextInputItem from './TextInputItem';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { content } from './content';
-import * as MeasureText from '@newbanker/react-native-measure-text';
+import MeasureText from '@newbanker/react-native-measure-text';
 import { Dimensions } from 'react-native';
 import { StatusBar } from 'react-native';
 import { Platform } from 'react-native';
