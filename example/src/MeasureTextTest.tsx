@@ -1,5 +1,15 @@
-package com.newbankerreactnativemeasuretext;
+import * as React from 'react';
 
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
+import { heights } from '@newbanker/react-native-measure-text';
+
+const TEXT = `package com.newbankerreactnativemeasuretext;
 import com.facebook.react.module.annotations.ReactModule;
 import androidx.annotation.NonNull;
 
@@ -137,3 +147,48 @@ public class ReactNativeMeasureTextModule extends ReactContextBaseJavaModule {
 
 
 }
+
+`.slice(0, 8000);
+
+const fontSize = 14;
+const width = 200;
+
+export default function MeasureTextTest() {
+  const [result, setResult] = React.useState<number | undefined>();
+  const [height, setHeight] = React.useState<number | undefined>();
+
+  React.useEffect(() => {
+    heights({ texts: [TEXT], width, fontSize }).then((hs) => setResult(hs[0]));
+  }, []);
+
+  return (
+    <SafeAreaView>
+      <ScrollView style={styles.container}>
+        <Text>{`MeasureText高度: ${result}`}</Text>
+        <Text>{`Height:                   ${height}`}</Text>
+        <TextInput
+          value={TEXT}
+          multiline
+          scrollEnabled
+          style={styles.textInput}
+          onLayout={({ nativeEvent }) => setHeight(nativeEvent.layout.height)}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {},
+  textInput: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingVertical: 0,
+    padding: 0,
+    textAlignVertical: 'top',
+    backgroundColor: 'gray',
+
+    fontSize: fontSize,
+    width: width,
+  },
+});
