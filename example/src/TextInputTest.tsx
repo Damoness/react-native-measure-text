@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   UIManager,
   findNodeHandle,
+  Text,
 } from 'react-native';
 import React, { useRef } from 'react';
 import TextInputItem from './TextInputItem';
@@ -16,18 +17,23 @@ import { Platform } from 'react-native';
 
 const fontSize = 14;
 const { height: screenHeight } = Dimensions.get('window');
+import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 
 const TextInputTest = () => {
-  const innerKeyboardRef = useRef<any>(null);
+  //const innerKeyboardRef = useRef<any>(null);
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
+  React.useEffect(() => {
+    AndroidKeyboardAdjust.setAdjustResize();
+  }, []);
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={style.container}>
       <KeyboardAwareScrollView
         enableResetScrollToCoords={true}
         enableOnAndroid
-        enableAutomaticScroll={false}
-        innerRef={(ref: any) => (innerKeyboardRef.current = ref)}
+        enableAutomaticScroll={true}
+        //innerRef={(ref: any) => (innerKeyboardRef.current = ref)}
         ref={scrollViewRef}
         onKeyboardWillChangeFrame={() => {}}
       >
@@ -52,7 +58,7 @@ const TextInputTest = () => {
             console.log('onSelectionChange', nativeEvent.selection);
 
             UIManager.measureInWindow(
-              findNodeHandle(innerKeyboardRef.current) as number,
+              findNodeHandle(scrollViewRef.current) as number,
               (x1, y1, width1, height1) => {
                 console.log('scrollView', x1, y1, height1, width1);
 
@@ -84,12 +90,12 @@ const TextInputTest = () => {
                       h,
                       cursorScreenY,
                       keyboardScreenY,
-                      scrollViewRef.current,
-                      innerKeyboardRef.current
+                      scrollViewRef.current
+                      //innerKeyboardRef.current
                     );
 
                     if (cursorScreenY > keyboardScreenY) {
-                      innerKeyboardRef.current.props.scrollForExtraHeightOnAndroid(
+                      scrollViewRef.current?.scrollForExtraHeightOnAndroid(
                         cursorScreenY - keyboardScreenY + 10
                       );
                     }
@@ -107,11 +113,15 @@ const TextInputTest = () => {
         <TextInputItem label="日程标题11" placeholder="请输入。。。" />
         <TextInputItem label="日程标题12" placeholder="请输入。。。" />
       </KeyboardAwareScrollView>
+      <Text>11111111</Text>
     </SafeAreaView>
   );
 };
 
 const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   multiTextInputStyle: {
     fontSize,
     paddingTop: 0,
